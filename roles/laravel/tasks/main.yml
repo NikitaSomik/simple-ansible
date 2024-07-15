@@ -14,8 +14,8 @@
   tags: laravel
 
 - name: Copy .env file
-  copy:
-    src: /path/to/local/.env
+  template:
+    src: .env.j2
     dest: "{{ app_work_dir }}/.env"
   tags: laravel
 
