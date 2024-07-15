@@ -1,0 +1,20 @@
+---
+- name: Add PHP {{ php_version }} repository
+  apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+  tags: php
+
+- name: Install PHP and extensions
+  apt:
+    name: 
+      - "php{{ php_version }}"
+      - "php{{ php_version }}-fpm"
+      - "php{{ php_version }}-mysql"
+      - "php{{ php_version }}-xml"
+      - "php{{ php_version }}-mbstring"
+      - "php{{ php_version }}-curl"
+      - "php{{ php_version }}-zip"
+    state: present
+  tags: php
+  notify: Restart PHP-FPM

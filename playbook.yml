@@ -1,0 +1,11 @@
+- hosts: webserver
+  become: yes
+  vars_files:
+    - group_vars/secrets.yml
+  roles:
+    - common
+    - nginx
+    - php
+    - mysql
+    - laravel
+    - deploy

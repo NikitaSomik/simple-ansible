@@ -1,0 +1,4 @@
+---
+php_version: "8.3"
+repo_git_url: "git@github.com:your_username/your_repository.git"
+app_work_dir: "/var/www/laravel"

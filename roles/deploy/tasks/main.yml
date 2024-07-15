@@ -1,0 +1,12 @@
+---
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted
+  tags: deploy
+
+- name: Restart PHP-FPM
+  service:
+    name: "php{{ php_version }}-fpm"
+    state: restarted
+  tags: deploy
