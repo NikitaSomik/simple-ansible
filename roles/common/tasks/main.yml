@@ -13,5 +13,9 @@
       - git
       - unzip
       - software-properties-common
+      - mysql-server
+      - mysql-client
+      - python3-mysqldb
+      - libmysqlclient-dev
     state: present
   tags: common
