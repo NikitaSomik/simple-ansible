@@ -1,27 +1,144 @@
 ---
-- name: Install MySQL
+- name: Update apt cache
   apt:
-    name: mysql-server
-    state: present
-  tags: mysql
+    update_cache: yes
 
-- name: Ensure MySQL is running
+# - name: Installing Mysql
+#   package:
+#     name: "{{item}}"
+#     state: present
+#     update_cache: yes
+#   loop:
+#     - mysql-server
+#     - mysql-client
+#     - python3-mysqldb
+#     - libmysqlclient-dev
+#   become: yes
+       
+- name: start and enable mysql service
   service:
     name: mysql
     state: started
     enabled: yes
-  tags: mysql
 
-- name: Create MySQL database
+- name: Set root user password
+  mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        host: localhost
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_password }}"
+        state: present
+    
+- name: creating database 
   mysql_db:
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
     name: "{{ db_name }}"
     state: present
-  tags: mysql
+    # name: "laravel-test"
+    # state: present
+    # login_user: "root"
+    # login_password: "root!"
 
-- name: Create MySQL user
-  mysql_user:
-    name: "{{ db_user }}"
-    password: "{{ db_password }}"
-    priv: "{{ db_name }}.*:ALL"
-    state: present
-  tags: mysql
+# handlers:
+#   - name: Restart mysql
+#       service:
+#         name: mysql
+#         state: restarted
+
+# - name: Update apt cache
+#   apt:
+#     update_cache: yes
+
+# - name: Install required Python libraries
+#   apt:
+#     name:
+#       - python3
+#       - python3-pip
+#       - python3-mysqldb
+#     state: present
+#   become: yes
+
+# - name: Install Python MySQL client library
+#   pip:
+#     name: mysqlclient
+#   become: yes
+
+# - name: Install Python PyMySQL library
+#   pip:
+#     name: PyMySQL
+#   become: yes    
+
+# - name: Install dependencies for Python
+#   apt:
+#     name: "{{ item }}"
+#     state: present
+#   become: true
+#   with_items:
+#     - python3
+#     - python3-setuptools
+#     - python3-dev
+#     - build-essential
+#     - python3-pip
+#     - python3-mysqldb
+#     - libmysqlclient-dev
+
+# - name: Install mysql components
+#   apt:
+#     name: "{{ item }}"
+#     state: present
+#   become: true
+#   with_items:
+#     - mysql-server
+#     - mysql-client
+
+# - name: Ensure MySQL is running
+#   service:
+#     name: mysql
+#     state: started
+#     enabled: yes
+#   tags:
+#     - mysql
+#     - configure
+
+# - name: Install Python MySQL client library
+#   pip:
+#     name: mysqlclient
+#   become: true
+
+# - name: Install Python PyMySQL library
+#   pip:
+#     name: PyMySQL
+#   become: true
+
+# - name: Create MySQL database
+#   mysql_db:
+#     name: "{{ db_name }}"
+#     state: present
+#   tags:
+#     - mysql
+#     - create-db
+
+
+# - include_tasks: tasks/install.yml
+#   tags:
+#     - mysql
+#     - install
+
+# - include_tasks: tasks/configure.yml
+#   tags:
+#     - mysql
+#     - configure
+
+# - include_tasks: tasks/database.yml
+#   tags:
+#     - mysql
+#     - create-db
+
+# - include_tasks: tasks/users.yml
+#   tags:
+#     - mysql
+#     - create-user
+

@@ -1,0 +1,6 @@
+# ---
+- name: Backup MySQL database
+  shell: mysqldump -u {{ db_user }} -p{{ db_password }} {{ db_name }} > /path/to/backup.sql
+  tags:
+    # - mysql
+    - backup

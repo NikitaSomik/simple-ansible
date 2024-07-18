@@ -1,0 +1,27 @@
+# ---
+# - name: Create MySQL user
+#   mysql_user:
+#     name: "{{ db_user }}"
+#     password: "{{ db_password }}"
+#     priv: "{{ db_name }}.*:ALL"
+#     state: present
+#   tags:
+#     - mysql
+#     - create-user
+
+# - name: Update MySQL user password
+#   mysql_user:
+#     name: "{{ db_user }}"
+#     password: "{{ new_db_password }}"
+#     update_password: always
+#   tags:
+#     - mysql
+#     - update-user
+
+# - name: Remove MySQL user
+#   mysql_user:
+#     name: "{{ db_user_to_remove }}"
+#     state: absent
+#   tags:
+#     - mysql
+#     - remove-user

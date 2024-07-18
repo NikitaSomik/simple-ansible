@@ -1,0 +1,22 @@
+# ---
+# - name: Ensure MySQL is running
+#   service:
+#     name: mysql
+#     state: started
+#     enabled: yes
+#   tags:
+#     - mysql
+#     - configure
+# # - name: Configure MySQL buffers
+# #   mysql_config:
+# #     login_user: root
+# #     login_password: "{{ mysql_root_password }}"
+# #     login_host: localhost
+# #     name: "{{ item.name }}"
+# #     value: "{{ item.value }}"
+# #   with_items:
+# #     - { name: "key_buffer_size", value: "256M" }
+# #     - { name: "max_connections", value: "100" }
+# #   tags:
+# #     - mysql
+# #     - configure
