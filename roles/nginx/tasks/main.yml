@@ -1,13 +1,26 @@
 ---
+- include_tasks: tasks/remove-apache.yml
+
 - name: Install Nginx
   apt:
     name: nginx
     state: present
+  notify: Restart Nginx
   tags: nginx
 
 - name: Copy Nginx config
-  copy:
-    src: default.conf
+  template:
+    src: templates/default.j2
     dest: /etc/nginx/sites-available/default
   notify: Restart Nginx
   tags: nginx
+
+- name: Link nginx config
+  become: true
+  file:
+    src: "/etc/nginx/sites-available/default"
+    dest: "/etc/nginx/sites-enabled/default"
+    state: link
+  tags:
+    - nginx
+  notify: Restart Nginx

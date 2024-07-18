@@ -1,0 +1,17 @@
+- name: Check if /var/www/html/ directory exists
+  stat:
+    path: /var/www/html/
+  register: html_dir
+
+- name: Remove Apache
+  apt:
+    name: apache2
+    state: absent
+  when: html_dir.stat.exists
+
+- name: Remove useless dir
+  shell: "rm -rf /var/www/html/"
+  tags:
+    - nginx
+  notify: Restart Nginx
+  when: html_dir.stat.exists

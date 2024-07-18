@@ -1,6 +1,7 @@
 logs
 vault_pass.txt
 venv
+group_vars/secrets.yml
 
 
 # Editor directories and files
