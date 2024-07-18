@@ -1,4 +1,4 @@
-- hosts: webserver
+- hosts: webservers
   become: yes
   vars_files:
     - group_vars/secrets.yml
