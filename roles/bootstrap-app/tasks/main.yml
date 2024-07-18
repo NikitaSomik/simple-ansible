@@ -42,7 +42,7 @@
     mode: "a+x"
 
 - name: Check Composer version
-  shell: composer --version
+  shell: sudo -u www-data composer --version
   register: composer_version_output
   tags: 
    - composer
