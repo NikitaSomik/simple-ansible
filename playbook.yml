@@ -7,5 +7,5 @@
     - nginx
     - php
     - mysql
-    - laravel
+    - bootstrap-app
     - deploy
