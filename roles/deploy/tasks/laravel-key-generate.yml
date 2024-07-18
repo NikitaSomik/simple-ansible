@@ -1,0 +1,20 @@
+---
+- name: Check if .env file exists
+  stat:
+    path: "{{ app_work_dir }}/.env"
+  register: env_file
+
+- name: Check if APP_KEY is set
+  command: grep -E '^APP_KEY=.*[^\s]+' {{ app_work_dir }}/.env
+  register: app_key_check
+  ignore_errors: true
+  when: env_file.stat.exists and env_file.stat.isreg
+
+- name: Generate Laravel key
+  command: php artisan key:generate
+  args:
+    chdir: "{{ app_work_dir }}"
+  when: not env_file.stat.exists or not env_file.stat.isreg or app_key_check.rc != 0
+  tags:
+    - laravel
+    - laravel-key-generate

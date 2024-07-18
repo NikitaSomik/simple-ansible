@@ -1,0 +1,8 @@
+---
+- name: Copy Laravel env file
+  become: true
+  template:
+    src: templates/env.conf
+    dest: "{{ app_work_dir }}/.env"
+  tags:
+    - laravel-env-file

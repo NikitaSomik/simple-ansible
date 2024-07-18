@@ -1,4 +1,77 @@
 ---
+- name: Make sure composer is at its latest version
+  become: false
+  shell: composer self-update
+  register: composer_self_update
+  changed_when: "'You are already using composer version' not in composer_self_update.stdout"
+  tags:
+    - deploy
+
+- name: Ensure project directory ownership
+  file:
+    path: "{{ app_work_dir }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes    
+
+- name: Run Composer install as www-data
+  shell: sudo -u www-data composer install
+  args:
+    chdir: "{{ app_work_dir }}"
+  tags: ['composer:install', deploy]
+
+- name: Configure Git to recognize the project directory as safe
+  shell: "git config --global --add safe.directory {{ app_work_dir }}"
+  tags: deploy
+
+- name: Reset any local changes
+  shell: "cd {{ app_work_dir }} && git reset --hard"
+  tags:
+    - deploy
+
+- name: Update repo - pull the latest changes
+  git:
+    repo: "{{ repo_git_url }}"
+    dest: "{{ app_work_dir }}"
+    update: yes
+    version: "{{ branch }}"
+    accept_hostkey: yes
+    # key_file: "/home/{{ current_user }}/.ssh/id_rsa.pub"
+  tags:
+    - deploy
+
+- name: Run artisan migrate
+  shell: "php {{ app_work_dir }} artisan migrate"
+  tags:
+    - deploy
+
+- name: Run clear cached routes
+  shell: "php {{ app_work_dir }} artisan route:clear"
+  tags:
+    - deploy
+
+- name: Run clear cache
+  shell: "php {{ app_work_dir}} artisan cache:clear"
+  tags:
+    - deploy
+
+- name: Update File Permissions
+  file: dest={{ app_work_dir }}  mode=0755 recurse=yes
+  tags:
+    - deploy
+    - file-permissions
+
+# - name: Update storage Permissions
+#   file: dest={{app_work_dir}}storage  mode=0777 recurse=yes
+#   tags:
+#     - deploy
+#     - file-permissions
+
+- include_tasks: tasks/config-files.yml
+
+- include_tasks: tasks/laravel-key-generate.yml
+
 - name: Restart Nginx
   service:
     name: nginx
