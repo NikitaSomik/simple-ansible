@@ -1,4 +1,11 @@
 ---
 php_version: "8.3"
+node_version: "20.15.1"
+home_dir: "/home/ubuntu"
+project_user: www-data
+nvm:
+  version: 0.39.3
+  user: ubuntu
+  node_version: "20.15.1"
 repo_git_url: "https://github.com/NikitaSomik/laravel"
 app_work_dir: "/var/www/laravel"

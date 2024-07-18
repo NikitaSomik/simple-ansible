@@ -11,12 +11,12 @@
   file:
     path: "{{ app_work_dir }}"
     state: directory
-    owner: www-data
-    group: www-data
+    owner: {{ project_user }}
+    group: {{ project_user }}
     recurse: yes    
 
-- name: Run Composer install as www-data
-  shell: sudo -u www-data composer install
+- name: Run Composer install as {{ project_user }}
+  shell: sudo -u {{ project_user }} composer install
   args:
     chdir: "{{ app_work_dir }}"
   tags: ['composer:install', deploy]
