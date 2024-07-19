@@ -1,0 +1,101 @@
+---
+- name: Install nvm
+  become: yes
+  become_user: "{{ nvm.user }}"
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v{{ nvm.version }}/install.sh | bash
+  environment:
+    HOME: "{{ home_dir }}"
+  tags: nvm
+
+- name: Add NVM initialization to ~/.profile
+  become: yes
+  become_user: "{{ nvm.user }}"
+  lineinfile:
+    path: "{{ home_dir }}/.profile"
+    line: 'export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"'
+    create: yes
+  tags: nvm
+
+- name: Add NVM initialization to ~/.bashrc
+  become: yes
+  become_user: "{{ nvm.user }}"
+  lineinfile:
+    path: "{{ home_dir }}/.bashrc"
+    line: 'export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"'
+    create: yes
+  tags: nvm
+
+- name: Install Node.js version
+  become: yes
+  become_user: "{{ nvm.user }}"
+  shell: |
+    . {{ home_dir }}/.nvm/nvm.sh
+    nvm install {{ node_version }}
+  environment:
+    NVM_DIR: "{{ home_dir }}/.nvm"
+  register: nvm_install_result
+  changed_when: "'is already installed.' not in nvm_install_result.stdout"
+  tags: nvm
+
+- name: Set default Node.js version
+  become: yes
+  become_user: "{{ nvm.user }}"
+  shell: |
+    . {{ home_dir }}/.nvm/nvm.sh
+    nvm alias default {{ node_version }}
+  environment:
+    NVM_DIR: "{{ home_dir }}/.nvm"
+  tags: nvm
+
+- import_tasks: tasks/install_packages.yml
+
+- import_tasks: tasks/run_build.yml
+
+- name: Source nvm and check nvm version
+  become: yes
+  become_user: "{{ nvm.user }}"
+  shell: |
+    . {{ home_dir }}/.nvm/nvm.sh
+    nvm --version
+  register: nvm_version_check
+  environment:
+    NVM_DIR: "{{ home_dir }}/.nvm"
+  tags: nodejs
+
+- name: Debug NVM version
+  debug:
+    msg: "NVM version: {{ nvm_version_check.stdout }}"
+  tags: nodejs
+
+- name: Source nvm and check Node.js version
+  become: yes
+  become_user: "{{ nvm.user }}"
+  shell: |
+    . {{ home_dir }}/.nvm/nvm.sh
+    node -v
+  register: node_version_check
+  environment:
+    NVM_DIR: "{{ home_dir }}/.nvm"
+  tags: nodejs
+
+- name: Debug Node.js version
+  debug:
+    msg: "Node.js version: {{ node_version_check.stdout }}"
+  tags: nodejs
+
+- name: Source nvm and check npm version
+  become: yes
+  become_user: "{{ nvm.user }}"
+  shell: |
+    . {{ home_dir }}/.nvm/nvm.sh
+    npm --version
+  register: npm_version_check
+  environment:
+    NVM_DIR: "{{ home_dir }}/.nvm"
+  tags: nodejs
+
+- name: Debug npm version
+  debug:
+    msg: "NPM version: {{ npm_version_check.stdout }}"
+  tags: nodejs

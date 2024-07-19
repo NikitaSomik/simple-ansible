@@ -11,8 +11,8 @@
   file:
     path: "{{ app_work_dir }}"
     state: directory
-    owner: {{ project_user }}
-    group: {{ project_user }}
+    owner: "{{ project_user }}"
+    group: "{{ project_user }}"
     recurse: yes    
 
 - name: Run Composer install as {{ project_user }}
@@ -37,7 +37,6 @@
     update: yes
     version: "{{ branch }}"
     accept_hostkey: yes
-    # key_file: "/home/{{ current_user }}/.ssh/id_rsa.pub"
   tags:
     - deploy
 
@@ -68,9 +67,9 @@
 #     - deploy
 #     - file-permissions
 
-- include_tasks: tasks/config-files.yml
+- include_tasks: tasks/config_files.yml
 
-- include_tasks: tasks/laravel-key-generate.yml
+- include_tasks: tasks/laravel_key_generate.yml
 
 - name: Restart Nginx
   service:

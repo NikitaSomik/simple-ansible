@@ -1,0 +1,20 @@
+---
+- name: Run npm build
+  become: true
+  shell: |
+    . {{ home_dir }}/.nvm/nvm.sh
+    npm run build
+  args:
+    chdir: "{{ app_work_dir }}"
+  environment:
+    NVM_DIR: "{{ home_dir }}/.nvm"
+  tags:
+    - npm
+
+- name: Ensure the app directory exists and has correct permissions
+  file:
+    path: "{{ app_work_dir }}"
+    state: directory
+    owner: "{{ project_user }}"
+    group: "{{ project_user }}"
+    recurse: yes
