@@ -40,18 +40,24 @@
   tags:
     - deploy
 
-- name: Run artisan migrate
-  shell: "php {{ app_work_dir }} artisan migrate"
+- name: Run Laravel migrations
+  shell: php artisan migrate --force
+  args:
+    chdir: "{{ app_work_dir }}"
   tags:
     - deploy
 
 - name: Run clear cached routes
-  shell: "php {{ app_work_dir }} artisan route:clear"
+  shell: php artisan route:clear --force
+  args:
+    chdir: "{{ app_work_dir }}"
   tags:
     - deploy
 
 - name: Run clear cache
-  shell: "php {{ app_work_dir}} artisan cache:clear"
+  shell: php artisan cache:clear --force
+  args:
+    chdir: "{{ app_work_dir }}"
   tags:
     - deploy
 
