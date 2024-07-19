@@ -48,14 +48,14 @@
     - deploy
 
 - name: Run clear cached routes
-  shell: php artisan route:clear --force
+  shell: php artisan route:clear
   args:
     chdir: "{{ app_work_dir }}"
   tags:
     - deploy
 
 - name: Run clear cache
-  shell: php artisan cache:clear --force
+  shell: php artisan cache:clear
   args:
     chdir: "{{ app_work_dir }}"
   tags:
@@ -73,8 +73,10 @@
 #     - deploy
 #     - file-permissions
 
-- include_tasks: tasks/config_files.yml
+# Import tasks config_files
+- import_tasks: tasks/config_files.yml
 
+# Import tasks laravel_key_generate
 - include_tasks: tasks/laravel_key_generate.yml
 
 - name: Restart Nginx

@@ -1,8 +1,14 @@
 ---
-- name: Copy Laravel env file
+- name: Import tasks to check .env file
+  import_tasks: tasks/check_env_file_exists.yml
+
+- name: Copy Laravel env file if it doesn't exist or force is true
   become: true
   template:
     src: templates/env.conf
     dest: "{{ app_work_dir }}/.env"
+  when:
+    - not env_file.stat.exists or (force | default(false) | bool)
   tags:
-    - laravel-env-file
+    - deploy
+    - env-file

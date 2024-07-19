@@ -1,0 +1,16 @@
+- name: Check if .env file exists
+  stat:
+    path: "{{ app_work_dir }}/.env"
+  register: env_file
+  tags:
+    - deploy
+    - env-file
+    - check-env-file-exists
+
+- name: Debug Env file exists
+  debug:
+    msg: "{{ env_file.stat.exists }}"
+  tags:
+    - deploy
+    - env-file
+    - check-env-file-exists
